@@ -1389,6 +1389,16 @@
             transition: color 0.25s;
         }
         .faq-q:hover { color: var(--primary); }
+        /* When the item opens, the question fades in from a lower opacity
+           so BOTH the question and the answer visibly fade together. */
+        .faq-item.open .faq-q {
+            color: var(--primary);
+            animation: faq-fade-in 0.55s cubic-bezier(.16, 1, .3, 1);
+        }
+        @keyframes faq-fade-in {
+            0%   { opacity: 0.25; }
+            100% { opacity: 1; }
+        }
         .faq-chevron {
             width: 22px; height: 22px;
             border: 1px solid var(--border);
@@ -1418,11 +1428,18 @@
             line-height: 1.75;
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.4s cubic-bezier(.16, 1, .3, 1), padding 0.4s;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: max-height 0.5s cubic-bezier(.16, 1, .3, 1),
+                        padding 0.5s cubic-bezier(.16, 1, .3, 1),
+                        opacity 0.5s ease,
+                        transform 0.5s cubic-bezier(.16, 1, .3, 1);
         }
         .faq-item.open .faq-a {
-            max-height: 300px;
+            max-height: 420px;
             padding-bottom: 1.5rem;
+            opacity: 1;
+            transform: translateY(0);
         }
 
         /* ---------- Contact ---------- */
@@ -1778,7 +1795,7 @@
                     <p class="reveal" data-delay="2">I'm Oluwaseyi, a founder and full-stack builder who turns ideas into real, shipped software. From social platforms to civic technology and e-commerce, I take products from zero to launch — solo.</p>
                     <p class="reveal" data-delay="3">Execution is my unfair advantage. I care about the product as much as the code: fast iteration, clean architecture, and interfaces people genuinely enjoy using. Rooted in Nigerian culture, global in ambition.</p>
                     <div class="tech-pills reveal" data-delay="4">
-                        <span class="tech-pill">Vanilla JS</span><span class="tech-pill">React</span><span class="tech-pill">Node.js</span><span class="tech-pill">HTML/CSS</span><span class="tech-pill">Supabase</span><span class="tech-pill">Cloudinary</span><span class="tech-pill">Firebase</span><span class="tech-pill">Paystack</span><span class="tech-pill">Tailwind CSS</span><span class="tech-pill">Express.js</span><span class="tech-pill">PostgreSQL</span><span class="tech-pill">JSX (JavaScript XML)</span>
+                        <span class="tech-pill">Vanilla JS</span><span class="tech-pill">React</span><span class="tech-pill">Node.js</span><span class="tech-pill">HTML/CSS</span><span class="tech-pill">Supabase</span><span class="tech-pill">Cloudinary</span><span class="tech-pill">Firebase</span><span class="tech-pill">Paystack</span><span class="tech-pill">Flutterwave</span><span class="tech-pill">Tailwind CSS</span><span class="tech-pill">Express.js</span><span class="tech-pill">PostgreSQL</span><span class="tech-pill">JSX (JavaScript XML)</span>
                     </div>
                 </div>
             </div>
@@ -1817,7 +1834,7 @@
                 <p class="focus-desc">A powerful e-commerce platform designed for seamless shopping experiences — connecting buyers and vendors with modern UI, robust backend systems, and integrated payments.</p>
                 <div class="focus-meta">
                     <span class="focus-meta-item"><strong>Role:</strong> Founder · Product Design · Full Stack</span>
-                    <span class="focus-meta-item"><strong>Stack:</strong> Node.js · Supabase · Paystack</span>
+                    <span class="focus-meta-item"><strong>Stack:</strong> Node.js · Supabase · Paystack · Flutterwave</span>
                     <span class="focus-meta-item"><strong>Status:</strong> In active development</span>
                 </div>
             </div>
@@ -1859,7 +1876,7 @@
         <div class="section-wrap">
             <p class="section-label reveal">Questions</p>
             <h2 class="section-title reveal" data-delay="1">Frequently Asked<br>Questions.</h2>
-            <!-- Rendered by React -->
+            <!-- Rendered by React — Q & A both fade in/out -->
             <div class="faq-list" id="faq-list"></div>
         </div>
     </section>
@@ -2131,8 +2148,6 @@
             else el.classList.add('in');
         }
 
-        /** Re-scan the DOM for reveal elements + rebind cursor hover.
-         *  Called on load and again after every React mount. */
         function refreshReveals() {
             document.querySelectorAll('.reveal,.reveal-left,.reveal-scale').forEach(el => {
                 if (el.classList.contains('in')) return;
@@ -2141,7 +2156,6 @@
             bindCursorHover();
         }
 
-        // Expose for the React layer
         window.refreshReveals = refreshReveals;
         window.observeReveal = observeReveal;
         window.bindCursorHover = bindCursorHover;
@@ -2196,7 +2210,6 @@
             const reduceMotion = window.matchMedia &&
                 window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-            // Respect reduced-motion: print instantly, kill the caret.
             if (reduceMotion) {
                 lines.forEach((l, i) => {
                     l.querySelector('.type-text').textContent = texts[i];
@@ -2227,13 +2240,12 @@
                     charIndex = 0;
                     if (!isLastLine) {
                         caret.classList.remove('active');
-                        setTimeout(tick, 240);   // brief pause between lines
+                        setTimeout(tick, 240);
                     }
-                    // On the last line the caret stays blinking.
                 }
             }
 
-            setTimeout(tick, 900); // let the h1 fade-up finish first
+            setTimeout(tick, 900);
         })();
 
         /* ============================================================
@@ -2307,24 +2319,15 @@
 
     <!-- ============================================================
          REACT LAYER
-         All dynamic sections (features, projects, skills, tech stack,
-         testimonials, FAQ) are React components rendered with JSX.
-         Images are served through ImageKit (front it with Cloudflare
-         for caching / custom domain).
          ============================================================ -->
     <script type="text/babel" data-presets="react">
         const { useState, useEffect } = React;
 
         /* ------------------------------------------------------------
            ImageKit image delivery
-           Replace `endpoint` with your own ImageKit URL endpoint, e.g.
-           https://ik.imagekit.io/<your_imagekit_id>
-           Put Cloudflare in front of it for caching + a custom domain.
-           Every <Img /> falls back to a remote URL if ImageKit 404s,
-           so the page never shows a broken image.
            ------------------------------------------------------------ */
         const IK = {
-            endpoint: 'https://ik.imagekit.io/oluwaseyi', // ← your ImageKit URL endpoint
+            endpoint: 'https://ik.imagekit.io/oluwaseyi',
             tr: {
                 icon:   'tr:w-160,h-160,fo-auto,q-80,f-auto',
                 avatar: 'tr:w-96,h-96,fo-face,q-80,f-auto',
@@ -2349,8 +2352,6 @@
             );
         }
 
-        /* After a React tree mounts, tell the vanilla layer to pick up
-           the new .reveal nodes and rebind the custom cursor. */
         function useReveal() {
             useEffect(() => {
                 if (window.refreshReveals) window.refreshReveals();
@@ -2420,6 +2421,8 @@
             vercel: <Svg><path d="M12 3l10 18H2z" /></Svg>,
             monitor: <Svg><rect x="2" y="3" width="20" height="14" rx="2" /><line x1="8" y1="21" x2="16" y2="21" /><line x1="12" y1="17" x2="12" y2="21" /></Svg>,
             package: <Svg><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 002 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z" /><polyline points="3.27 6.96 12 12.01 20.73 6.96" /><line x1="12" y1="22.08" x2="12" y2="12" /></Svg>,
+            /* Flutterwave — wave-shaped mark */
+            flutterwave: <Svg><path d="M2 13c2.5-4.5 5.5-6.5 10-6.5s7.5 2 10 6.5" /><path d="M2 17c2.5-4.5 5.5-6.5 10-6.5s7.5 2 10 6.5" /></Svg>,
         };
 
         /* ------------------------------------------------------------
@@ -2455,7 +2458,7 @@
             { title: 'Freeupper', desc: 'A modern social blogging platform with an explore feed, reactions, bookmarks, video posts, and a rich profile dashboard.', role: 'Founder · Product Design · Full Stack', tags: ['Vanilla JS', 'Cloudinary', 'LocalStorage', 'Social'], url: 'https://freeupper.vercel.app/', icon: Icon.pen, gradient: 'linear-gradient(135deg,rgba(99,102,241,0.10),rgba(124,58,237,0.06))' },
             { title: 'Fremeisc', desc: 'An innovative web application blending modern design with powerful functionality. Built with performance and user experience as top priorities.', role: 'Founder · Full Stack Development', tags: ['Vanilla JS', 'Vercel', 'Web App'], url: 'https://fremeisc.vercel.app/', icon: Icon.rocket, gradient: 'linear-gradient(135deg,rgba(124,58,237,0.13),rgba(99,102,241,0.08))' },
             { title: 'Student CBT', desc: 'A complete computer-based testing platform with timed exams, auto-grading, and a rich question bank — designed for educational institutions.', role: 'Founder · Full Stack Development', tags: ['Node.js', 'Supabase', 'Vercel', 'EdTech'], url: 'https://student-cbt.vercel.app/', icon: Icon.pen, gradient: 'linear-gradient(135deg,rgba(99,102,241,0.12),rgba(124,58,237,0.10))' },
-            { title: 'Omekart', desc: 'A powerful e-commerce platform connecting buyers and vendors — seamless shopping with modern UI, robust backend, and integrated payments.', role: 'Founder · Product Design · Full Stack', tags: ['In Progress', 'E-Commerce', 'Node.js'], url: '#', icon: Icon.shoppingBag, gradient: 'linear-gradient(135deg,rgba(124,58,237,0.10),rgba(99,102,241,0.10))' },
+            { title: 'Omekart', desc: 'A powerful e-commerce platform connecting buyers and vendors — seamless shopping with modern UI, robust backend, and integrated payments.', role: 'Founder · Product Design · Full Stack', tags: ['In Progress', 'E-Commerce', 'Node.js', 'Paystack', 'Flutterwave'], url: '#', icon: Icon.shoppingBag, gradient: 'linear-gradient(135deg,rgba(124,58,237,0.10),rgba(99,102,241,0.10))' },
         ];
 
         function ProjectsGrid() {
@@ -2533,6 +2536,7 @@
             { icon: SkillIcon.vercel, label: 'Vercel' },
             { icon: SkillIcon.monitor, label: 'Render' },
             { icon: SkillIcon.package, label: 'Express.js' },
+            { icon: SkillIcon.flutterwave, label: 'Flutterwave' },
         ];
 
         function SkillsMarquee() {
@@ -2552,7 +2556,7 @@
             { name: 'Backend', items: ['Node.js', 'Express.js', 'REST APIs', 'WebSocket', 'JWT Auth'] },
             { name: 'Databases', items: ['PostgreSQL', 'MongoDB', 'Supabase', 'Firebase Firestore', 'Redis'] },
             { name: 'Cloud & DevOps', items: ['Vercel', 'Render', 'Cloudflare', 'ImageKit', 'Cloudinary', 'GitHub Actions', 'CI/CD'] },
-            { name: 'Payments & Auth', items: ['Paystack', 'Firebase Auth', 'OAuth', 'Stripe'] },
+            { name: 'Payments & Auth', items: ['Paystack', 'Flutterwave', 'Firebase Auth', 'OAuth', 'Stripe'] },
             { name: 'Tools & More', items: ['Socket.IO', 'RabbitMQ', 'Leaflet', 'Git', 'Figma'] },
         ];
 
@@ -2603,13 +2607,13 @@
         }
 
         /* ------------------------------------------------------------
-           FAQ
+           FAQ — both Q & A fade in / out together
            ------------------------------------------------------------ */
         const FAQS = [
             { q: 'What type of projects do you take on?', a: 'I work on social platforms, SaaS products, civic technology, and e-commerce applications — projects with genuine complexity. I prefer engagements where I can contribute to architectural decisions and take ownership of the product, rather than simply executing a predefined specification.' },
             { q: 'Do you work solo or with a team?', a: 'I operate as a solo builder by choice, owning the entire stack from frontend to deployment. For larger engagements, I bring in trusted collaborators while I lead product strategy and architecture.' },
             { q: 'What is your typical timeline for an MVP?', a: 'A focused MVP can be delivered in as little as 4 days. For larger platforms, work is structured into 2-week delivery sprints with continuous deployment, so you see measurable progress at every stage.' },
-            { q: 'How do you handle payments and authentication?', a: "I integrate Paystack for the Nigerian and broader African market, and Stripe for global payments. Authentication is handled through Firebase, Supabase, or custom JWT — whichever best fits the product's requirements." },
+            { q: 'How do you handle payments and authentication?', a: "I integrate Paystack and Flutterwave for the Nigerian and broader African market, and Stripe for global payments. Authentication is handled through Firebase, Supabase, or custom JWT — whichever best fits the product's requirements." },
             { q: 'Do you offer post-launch support?', a: 'Yes. I include 3 weeks of post-launch support as standard, with the exact scope tailored to the kind of product and its complexity. Extended retainer arrangements are available for products that require ongoing iteration.' },
         ];
 
