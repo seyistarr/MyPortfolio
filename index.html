@@ -228,7 +228,23 @@
             -webkit-backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--border);
         }
+
+        /* ---------- Logo (uses your image on desktop) ---------- */
         .nav-logo {
+            display: flex;
+            align-items: center;
+            flex-shrink: 0;
+            text-decoration: none;
+            gap: 0.5rem;
+        }
+        .nav-logo-img {
+            height: 40px;
+            width: auto;
+            max-width: 170px;
+            object-fit: contain;
+            display: block;
+        }
+        .nav-logo-text {
             font-family: var(--font-head);
             font-size: 1.3rem;
             font-weight: 900;
@@ -237,9 +253,8 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            text-decoration: none;
-            flex-shrink: 0;
         }
+
         .nav-links {
             display: flex;
             gap: 2.2rem;
@@ -1366,6 +1381,12 @@
             transition: background 0.35s ease, border-color 0.35s ease;
         }
         .faq-list { margin-top: 4rem; max-width: 720px; }
+
+        /* Outer wrapper holds the reveal animation so the inner
+           .faq-item can change className (open / closed) freely
+           without React wiping the reveal state. */
+        .faq-item-wrap { /* reveal handled by .reveal class */ }
+
         .faq-item {
             border-bottom: 1px solid var(--border);
             overflow: hidden;
@@ -1389,15 +1410,10 @@
             transition: color 0.25s;
         }
         .faq-q:hover { color: var(--primary); }
-        /* When the item opens, the question fades in from a lower opacity
-           so BOTH the question and the answer visibly fade together. */
+        /* When open, only the colour changes — the question stays
+           fully visible (no opacity animation). */
         .faq-item.open .faq-q {
             color: var(--primary);
-            animation: faq-fade-in 0.55s cubic-bezier(.16, 1, .3, 1);
-        }
-        @keyframes faq-fade-in {
-            0%   { opacity: 0.25; }
-            100% { opacity: 1; }
         }
         .faq-chevron {
             width: 22px; height: 22px;
@@ -1420,6 +1436,7 @@
             border-color: var(--primary);
             color: #fff;
         }
+        /* Smooth, gentle fade-in for the answer only */
         .faq-a {
             font-family: var(--font-body);
             font-size: 0.9rem;
@@ -1429,11 +1446,11 @@
             max-height: 0;
             overflow: hidden;
             opacity: 0;
-            transform: translateY(-10px);
-            transition: max-height 0.5s cubic-bezier(.16, 1, .3, 1),
-                        padding 0.5s cubic-bezier(.16, 1, .3, 1),
-                        opacity 0.5s ease,
-                        transform 0.5s cubic-bezier(.16, 1, .3, 1);
+            transform: translateY(-8px);
+            transition: max-height 0.45s cubic-bezier(.16, 1, .3, 1),
+                        padding 0.45s cubic-bezier(.16, 1, .3, 1),
+                        opacity 0.45s ease,
+                        transform 0.45s cubic-bezier(.16, 1, .3, 1);
         }
         .faq-item.open .faq-a {
             max-height: 420px;
@@ -1591,8 +1608,6 @@
             position: relative;
             z-index: 2;
             border-top: 1px solid var(--border);
-            /* Extra bottom room so the floating WhatsApp / back-to-top
-               buttons never sit on top of the copyright line */
             padding: 2.5rem 5% 6.5rem;
             display: flex;
             align-items: center;
@@ -1697,12 +1712,14 @@
             footer { flex-direction: column; gap: 1rem; text-align: center; }
             .contact-form { padding: 1.5rem; }
             .focus-card { padding: 2rem; }
+            .nav-logo-img { height: 34px; max-width: 130px; }
         }
         @media (max-width: 480px) {
             .hero-h1 { font-size: 2.6rem; }
             .whatsapp-float { width: 50px; height: 50px; bottom: 20px; left: 20px; }
             .whatsapp-float svg { width: 26px; height: 26px; }
             #back-top { bottom: 20px; right: 20px; }
+            .nav-logo-img { height: 30px; max-width: 110px; }
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -1723,7 +1740,19 @@
     <div id="cursor-ring"></div>
 
     <nav id="navbar">
-        <a href="#hero" class="nav-logo">OA<span style="color:var(--accent)">.</span></a>
+        <!-- ============================================================
+             LOGO — uses your image. Change "src" to your logo file.
+             If the image is missing, the text "OA." is shown instead.
+             ============================================================ -->
+        <a href="#hero" class="nav-logo">
+            <img
+                src="./logo.png"
+                alt="Oluwaseyi"
+                class="nav-logo-img"
+                onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-flex';"
+            >
+            <span class="nav-logo-text" style="display:none;">OA<span style="color:var(--accent)">.</span></span>
+        </a>
         <ul class="nav-links">
             <li><a href="#about">About</a></li>
             <li><a href="#projects">Products</a></li>
@@ -1756,7 +1785,7 @@
         <div class="hero-inner">
             <div class="hero-badge"><span class="dot"></span> Oluwaseyi · Founder & Builder</div>
 
-            <!-- Automatic typewriter headline (typed by JS, see typewriter() below) -->
+            <!-- Automatic typewriter headline -->
             <h1 class="hero-h1" id="hero-h1" aria-label="From idea to launch. Built end-to-end.">
                 <span class="line"><span class="type-text" data-text="FROM IDEA"></span><span class="caret" aria-hidden="true"></span></span>
                 <span class="line"><span class="type-text" data-text="TO LAUNCH."></span><span class="caret" aria-hidden="true"></span></span>
@@ -1876,7 +1905,7 @@
         <div class="section-wrap">
             <p class="section-label reveal">Questions</p>
             <h2 class="section-title reveal" data-delay="1">Frequently Asked<br>Questions.</h2>
-            <!-- Rendered by React — Q & A both fade in/out -->
+            <!-- Rendered by React — Q & A both stay visible, A fades in -->
             <div class="faq-list" id="faq-list"></div>
         </div>
     </section>
@@ -1927,7 +1956,6 @@
 
     <!-- ============================================================
          LIBRARIES (all open source, MIT)
-         React 18 + ReactDOM 18 (UMD) · Babel Standalone (JSX in browser)
          ============================================================ -->
     <script src="https://cdn.jsdelivr.net/npm/react@18.3.1/umd/react.production.min.js" crossorigin></script>
     <script src="https://cdn.jsdelivr.net/npm/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin></script>
@@ -1936,13 +1964,9 @@
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
     <!-- ============================================================
-         CORE (vanilla) — theme, cursor, particles, scroll, reveal,
-         typewriter, toasts, contact form, nav.
+         CORE (vanilla)
          ============================================================ -->
     <script>
-        /* ============================================================
-           GLOBAL STATE — declared FIRST so nothing hits a TDZ error
-           ============================================================ */
         let particleColors = ['124,58,237', '99,102,241'];
 
         function updateParticleColors(theme) {
@@ -1951,9 +1975,7 @@
                 : ['124,58,237', '99,102,241'];
         }
 
-        /* ============================================================
-           THEME ENGINE
-           ============================================================ */
+        /* THEME ENGINE */
         const rootEl = document.documentElement;
         const themeToggle = document.getElementById('theme-toggle');
 
@@ -1988,23 +2010,18 @@
             else if (mql.addListener) mql.addListener(listener);
         }
 
-        /* ============================================================
-           SVG ICON LIBRARY (only what the vanilla layer still needs)
-           ============================================================ */
+        /* SVG ICONS (vanilla side) */
         const svgIcons = {
             check: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
             xmark: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>',
             spinner: '<svg class="spinner" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10" stroke-dasharray="32" stroke-dashoffset="8"/></svg>',
         };
 
-        // Safe EmailJS init
         if (typeof emailjs !== 'undefined' && emailjs.init) {
             try { emailjs.init("jicJWe3zp3j0GONBf"); } catch (e) { console.warn('EmailJS init failed:', e); }
         }
 
-        /* ============================================================
-           CUSTOM CURSOR
-           ============================================================ */
+        /* CUSTOM CURSOR */
         const dot = document.getElementById('cursor-dot');
         const ring = document.getElementById('cursor-ring');
         const isTouch = window.matchMedia && window.matchMedia('(hover: none)').matches;
@@ -2029,16 +2046,14 @@
 
         function bindCursorHover(scope) {
             if (isTouch) return;
-            (scope || document).querySelectorAll('a,button,.feat-card,.proj-card,.testi-card,.skill-chip,.process-card,.tech-cat-card').forEach(el => {
+            (scope || document).querySelectorAll('a,button,.feat-card,.proj-card,.testi-card,.skill-chip,.process-card,.tech-cat-card,.faq-q').forEach(el => {
                 el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
                 el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
             });
         }
         bindCursorHover();
 
-        /* ============================================================
-           PARTICLE FIELD
-           ============================================================ */
+        /* PARTICLE FIELD */
         const canvas = document.getElementById('particle-canvas');
         const ctx = canvas ? canvas.getContext('2d') : null;
         let W = 0, H = 0, particles = [];
@@ -2111,9 +2126,7 @@
             }
         }
 
-        /* ============================================================
-           SCROLL UI
-           ============================================================ */
+        /* SCROLL UI */
         const progressBar = document.getElementById('progress-bar');
         const navbar = document.getElementById('navbar');
         const backTop = document.getElementById('back-top');
@@ -2130,9 +2143,7 @@
             if (el) el.classList.toggle('open');
         }
 
-        /* ============================================================
-           REVEAL OBSERVER — with fallback + refresh for React mounts
-           ============================================================ */
+        /* REVEAL OBSERVER */
         let revealObs = null;
         if ('IntersectionObserver' in window) {
             revealObs = new IntersectionObserver(entries => entries.forEach(e => {
@@ -2162,9 +2173,7 @@
 
         refreshReveals();
 
-        /* ============================================================
-           COUNT UP
-           ============================================================ */
+        /* COUNT UP */
         function countUp(el, target, duration = 1500) {
             let start = 0;
             const step = target / (duration / 16);
@@ -2195,9 +2204,7 @@
             });
         }
 
-        /* ============================================================
-           HERO TYPEWRITER — "FROM IDEA / TO LAUNCH. / BUILT END-TO-END."
-           ============================================================ */
+        /* HERO TYPEWRITER */
         (function typewriter() {
             const lines = document.querySelectorAll('#hero-h1 .line');
             if (!lines.length) return;
@@ -2248,9 +2255,7 @@
             setTimeout(tick, 900);
         })();
 
-        /* ============================================================
-           TOASTS + CONTACT FORM
-           ============================================================ */
+        /* TOASTS + CONTACT FORM */
         function showToast(message, type = 'success') {
             const container = document.getElementById('toast-container');
             if (!container) return;
@@ -2298,9 +2303,7 @@
             });
         }
 
-        /* ============================================================
-           ACTIVE NAV LINK
-           ============================================================ */
+        /* ACTIVE NAV LINK */
         const sections = document.querySelectorAll('section[id]');
         const navLinks = document.querySelectorAll('.nav-links a');
         if ('IntersectionObserver' in window && sections.length && navLinks.length) {
@@ -2421,7 +2424,6 @@
             vercel: <Svg><path d="M12 3l10 18H2z" /></Svg>,
             monitor: <Svg><rect x="2" y="3" width="20" height="14" rx="2" /><line x1="8" y1="21" x2="16" y2="21" /><line x1="12" y1="17" x2="12" y2="21" /></Svg>,
             package: <Svg><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 002 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z" /><polyline points="3.27 6.96 12 12.01 20.73 6.96" /><line x1="12" y1="22.08" x2="12" y2="12" /></Svg>,
-            /* Flutterwave — wave-shaped mark */
             flutterwave: <Svg><path d="M2 13c2.5-4.5 5.5-6.5 10-6.5s7.5 2 10 6.5" /><path d="M2 17c2.5-4.5 5.5-6.5 10-6.5s7.5 2 10 6.5" /></Svg>,
         };
 
@@ -2607,7 +2609,9 @@
         }
 
         /* ------------------------------------------------------------
-           FAQ — both Q & A fade in / out together
+           FAQ — Q & A both stay VISIBLE when open. Only the answer
+           fades in. The reveal class lives on a stable outer wrapper
+           so React never wipes it when the open state changes.
            ------------------------------------------------------------ */
         const FAQS = [
             { q: 'What type of projects do you take on?', a: 'I work on social platforms, SaaS products, civic technology, and e-commerce applications — projects with genuine complexity. I prefer engagements where I can contribute to architectural decisions and take ownership of the product, rather than simply executing a predefined specification.' },
@@ -2622,16 +2626,18 @@
             const [openIndex, setOpenIndex] = useState(-1);
 
             return FAQS.map((f, i) => (
-                <div className={'faq-item reveal' + (openIndex === i ? ' open' : '')} key={f.q}>
-                    <button
-                        className="faq-q"
-                        type="button"
-                        onClick={() => setOpenIndex(openIndex === i ? -1 : i)}
-                    >
-                        <span>{f.q}</span>
-                        <span className="faq-chevron">{Icon.chevronDown}</span>
-                    </button>
-                    <div className="faq-a">{f.a}</div>
+                <div className="faq-item-wrap reveal" key={f.q}>
+                    <div className={'faq-item' + (openIndex === i ? ' open' : '')}>
+                        <button
+                            className="faq-q"
+                            type="button"
+                            onClick={() => setOpenIndex(openIndex === i ? -1 : i)}
+                        >
+                            <span>{f.q}</span>
+                            <span className="faq-chevron">{Icon.chevronDown}</span>
+                        </button>
+                        <div className="faq-a">{f.a}</div>
+                    </div>
                 </div>
             ));
         }
