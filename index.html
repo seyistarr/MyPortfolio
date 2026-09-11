@@ -290,10 +290,10 @@
             position: relative;
             z-index: 2;
             max-width: 900px;
-            padding: 0 5%;
+            padding: 110px 5% 40px;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: flex-start;
             min-height: 100vh;
             margin-left: auto;
             margin-right: auto;
@@ -448,7 +448,7 @@
             letter-spacing: 0.1em;
             color: var(--grey);
             text-transform: uppercase;
-            margin-top: auto;
+            margin-top: 3.5rem;
             padding-bottom: 2rem;
             opacity: 0;
             animation: fade-up 0.8s 1.4s forwards;
@@ -1203,14 +1203,8 @@
             width: 40px;
             height: 40px;
             border-radius: 50%;
+            object-fit: cover;
             background: linear-gradient(135deg, var(--purple), var(--cyan));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: var(--font-head);
-            font-size: 0.9rem;
-            font-weight: 700;
-            color: #fff;
             flex-shrink: 0;
         }
         .testi-name {
@@ -1930,7 +1924,7 @@
         // Projects
         const projectsData = [
             { title: 'CivicReport', desc: 'A real-time civic incident reporting platform — citizens log incidents, authorities respond. Built for real-world impact.', role: 'Founder · Full Stack Development', tags: ['Supabase', 'Leaflet', 'Real-time', 'PWA'], url: 'https://civicreport-sigma.vercel.app/', icon: svgIcons.shield, gradient: 'linear-gradient(135deg,rgba(124,58,237,0.15),rgba(0,245,212,0.08))' },
-            { title: 'Freeupper', desc: 'A modern social blogging platform with an explore feed, reactions, bookmarks, video posts, and a rich profile dashboard.', role: 'Founder · Product Design · Full Stack', tags: ['Vanilla JS', 'Cloudinary', 'LocalStorage', 'Social'], url: 'https://seyistarr.github.io/Freeupper/', icon: svgIcons.pen, gradient: 'linear-gradient(135deg,rgba(0,245,212,0.12),rgba(124,58,237,0.08))' },
+            { title: 'Freeupper', desc: 'A modern social blogging platform with an explore feed, reactions, bookmarks, video posts, and a rich profile dashboard.', role: 'Founder · Product Design · Full Stack', tags: ['Vanilla JS', 'Cloudinary', 'LocalStorage', 'Social'], url: 'https://freeupper.vercel.app/', icon: svgIcons.pen, gradient: 'linear-gradient(135deg,rgba(0,245,212,0.12),rgba(124,58,237,0.08))' },
             { title: 'Fremeisc', desc: 'An innovative web application blending modern design with powerful functionality. Built with performance and user experience as top priorities.', role: 'Founder · Full Stack Development', tags: ['Vanilla JS', 'Vercel', 'Web App'], url: 'https://fremeisc.vercel.app/', icon: svgIcons.rocket, gradient: 'linear-gradient(135deg,rgba(124,58,237,0.18),rgba(255,180,0,0.1))' },
             { title: 'Student CBT', desc: 'A complete computer-based testing platform with timed exams, auto-grading, and a rich question bank — designed for educational institutions.', role: 'Founder · Full Stack Development', tags: ['Node.js', 'Supabase', 'Vercel', 'EdTech'], url: 'https://student-cbt.vercel.app/', icon: svgIcons.pen, gradient: 'linear-gradient(135deg,rgba(0,245,212,0.12),rgba(124,58,237,0.15))' },
             { title: 'Omekart', desc: 'A powerful e-commerce platform connecting buyers and vendors — seamless shopping with modern UI, robust backend, and integrated payments.', role: 'Founder · Product Design · Full Stack', tags: ['In Progress', 'E-Commerce', 'Node.js'], url: '#', icon: svgIcons.shoppingBag, gradient: 'linear-gradient(135deg,rgba(124,58,237,0.12),rgba(255,180,0,0.1))' },
@@ -1998,16 +1992,16 @@
 
         // Testimonials
         const testimonials = [
-            { quote: 'Oluwaseyi built CivicReport end‑to‑end, solo. The product thinking, the speed, the UI quality — genuinely impressive for a one‑person operation.', name: 'Chioma A.', role: 'Product Lead · Lagos', initials: 'CA' },
-            { quote: 'The Freeupper social feed feels like a real product. The TikTok‑style explore, the reactions, the video player — it all works smoothly and feels polished.', name: 'Tunde O.', role: 'Software Engineer', initials: 'TO' },
-            { quote: 'Working with Seyi is different — he understands the business side too. He doesn\'t just code what you say, he questions what you actually need and delivers better.', name: 'Amara K.', role: 'Startup Founder', initials: 'AK' },
+            { quote: 'Oluwaseyi built CivicReport end-to-end, solo. The product thinking, the speed, the UI quality — genuinely impressive for a one-person operation.', name: 'Chioma A.', role: 'Product Lead · Lagos', photo: 'https://i.pravatar.cc/150?img=47' },
+            { quote: 'The Freeupper social feed feels like a real product. The immersive explore experience, reactions, video player, and smooth interactions make the platform feel polished and engaging.', name: 'Tunde O.', role: 'Software Engineer', photo: 'https://i.pravatar.cc/150?img=12' },
+            { quote: 'Working with Seyi is different — he understands the business side too. He doesn\'t just code what you say, he questions what you actually need and delivers better.', name: 'Amara K.', role: 'Startup Founder', photo: 'https://i.pravatar.cc/150?img=32' },
         ];
         const testiGrid = document.getElementById('testi-grid');
         testimonials.forEach((t, i) => {
             const div = document.createElement('div');
             div.className = 'testi-card reveal';
             div.dataset.delay = i + 1;
-            div.innerHTML = `<div class="testi-stars">${svgIcons.star}${svgIcons.star}${svgIcons.star}${svgIcons.star}${svgIcons.star}</div><p class="testi-quote">${t.quote}</p><div class="testi-person"><div class="testi-avatar">${t.initials}</div><div><div class="testi-name">${t.name}</div><div class="testi-role">${t.role}</div></div></div>`;
+            div.innerHTML = `<div class="testi-stars">${svgIcons.star}${svgIcons.star}${svgIcons.star}${svgIcons.star}${svgIcons.star}</div><p class="testi-quote">${t.quote}</p><div class="testi-person"><img class="testi-avatar" src="${t.photo}" alt="${t.name}"><div><div class="testi-name">${t.name}</div><div class="testi-role">${t.role}</div></div></div>`;
             testiGrid.appendChild(div);
             revealObs.observe(div);
         });
