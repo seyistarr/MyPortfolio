@@ -20,6 +20,11 @@
 
     <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- ImageKit (image CDN, typically fronted by Cloudflare) + React CDN -->
+    <link rel="preconnect" href="https://ik.imagekit.io" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+
     <meta property="og:title" content="Oluwaseyi Archangelstr · Builder of Things">
     <meta property="og:description" content="Solo full‑stack builder crafting SaaS platforms, social apps, and web experiences with vanilla JS and Node.js.">
     <meta property="og:image" content="https://oluwaseyistarrportfolio.vercel.app/profile.jpg">
@@ -436,18 +441,30 @@
             text-transform: uppercase;
             color: var(--text);
         }
-        .hero-h1 .line { display: block; overflow: hidden; }
-        .hero-h1 .line span {
-            display: inline-block;
-            animation: line-in 0.8s cubic-bezier(.16, 1, .3, 1) forwards;
-            opacity: 0;
+        /* --- Typewriter headline --- */
+        .hero-h1 .line {
+            display: block;
+            min-height: 0.95em;
         }
-        .hero-h1 .line:nth-child(1) span { animation-delay: 0.5s; }
-        .hero-h1 .line:nth-child(2) span { animation-delay: 0.65s; }
-        .hero-h1 .line:nth-child(3) span { animation-delay: 0.8s; }
-        @keyframes line-in {
-            from { opacity: 0; transform: translateY(100%); }
-            to { opacity: 1; transform: translateY(0); }
+        .hero-h1 .type-text { white-space: pre-wrap; }
+        .hero-h1 .caret {
+            display: inline-block;
+            width: 0.055em;
+            min-width: 3px;
+            height: 0.72em;
+            margin-left: 0.05em;
+            background: var(--primary);
+            border-radius: 2px;
+            opacity: 0;
+            vertical-align: -0.02em;
+        }
+        .hero-h1 .caret.active {
+            opacity: 1;
+            animation: caret-blink 1s steps(1, end) infinite;
+        }
+        @keyframes caret-blink {
+            0%, 45% { opacity: 1; }
+            46%, 100% { opacity: 0; }
         }
         .gradient-text {
             background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
@@ -1557,7 +1574,9 @@
             position: relative;
             z-index: 2;
             border-top: 1px solid var(--border);
-            padding: 2.5rem 5%;
+            /* Extra bottom room so the floating WhatsApp / back-to-top
+               buttons never sit on top of the copyright line */
+            padding: 2.5rem 5% 6.5rem;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -1719,11 +1738,14 @@
         <div class="hero-grid"></div>
         <div class="hero-inner">
             <div class="hero-badge"><span class="dot"></span> Oluwaseyi · Founder & Builder</div>
-            <h1 class="hero-h1">
-                <span class="line"><span>FROM IDEA</span></span>
-                <span class="line"><span>TO LAUNCH.</span></span>
-                <span class="line"><span class="gradient-text">BUILT END-TO-END.</span></span>
+
+            <!-- Automatic typewriter headline (typed by JS, see typewriter() below) -->
+            <h1 class="hero-h1" id="hero-h1" aria-label="From idea to launch. Built end-to-end.">
+                <span class="line"><span class="type-text" data-text="FROM IDEA"></span><span class="caret" aria-hidden="true"></span></span>
+                <span class="line"><span class="type-text" data-text="TO LAUNCH."></span><span class="caret" aria-hidden="true"></span></span>
+                <span class="line"><span class="type-text gradient-text" data-text="BUILT END-TO-END."></span><span class="caret" aria-hidden="true"></span></span>
             </h1>
+
             <p class="hero-sub">I design, build and launch software products from scratch. From product strategy and UI design to backend systems and deployment — I own the full process.</p>
             <div class="hero-actions">
                 <a href="#projects" class="btn-primary"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg> View my products</a>
@@ -1756,7 +1778,7 @@
                     <p class="reveal" data-delay="2">I'm Oluwaseyi, a founder and full-stack builder who turns ideas into real, shipped software. From social platforms to civic technology and e-commerce, I take products from zero to launch — solo.</p>
                     <p class="reveal" data-delay="3">Execution is my unfair advantage. I care about the product as much as the code: fast iteration, clean architecture, and interfaces people genuinely enjoy using. Rooted in Nigerian culture, global in ambition.</p>
                     <div class="tech-pills reveal" data-delay="4">
-                        <span class="tech-pill">Vanilla JS</span><span class="tech-pill">Node.js</span><span class="tech-pill">HTML/CSS</span><span class="tech-pill">Supabase</span><span class="tech-pill">Cloudinary</span><span class="tech-pill">Firebase</span><span class="tech-pill">Paystack</span><span class="tech-pill">Tailwind CSS</span><span class="tech-pill">Express.js</span><span class="tech-pill">PostgreSQL</span><span class="tech-pill">JSX (JavaScript XML)</span>
+                        <span class="tech-pill">Vanilla JS</span><span class="tech-pill">React</span><span class="tech-pill">Node.js</span><span class="tech-pill">HTML/CSS</span><span class="tech-pill">Supabase</span><span class="tech-pill">Cloudinary</span><span class="tech-pill">Firebase</span><span class="tech-pill">Paystack</span><span class="tech-pill">Tailwind CSS</span><span class="tech-pill">Express.js</span><span class="tech-pill">PostgreSQL</span><span class="tech-pill">JSX (JavaScript XML)</span>
                     </div>
                 </div>
             </div>
@@ -1768,6 +1790,7 @@
             <p class="section-label reveal">Capabilities</p>
             <h2 class="section-title reveal" data-delay="1">How I build products.</h2>
             <p class="section-sub reveal" data-delay="2">From concept to scale — these are the pillars of how I deliver working software.</p>
+            <!-- Rendered by React -->
             <div class="features-grid" id="features-grid"></div>
         </div>
     </section>
@@ -1806,6 +1829,7 @@
             <p class="section-label reveal">Selected work</p>
             <h2 class="section-title reveal" data-delay="1">Selected Products.</h2>
             <p class="section-sub reveal" data-delay="2">Real applications, live on the internet, built solo from idea to deployment.</p>
+            <!-- Rendered by React -->
             <div class="projects-grid" id="projects-grid"></div>
         </div>
     </section>
@@ -1816,6 +1840,7 @@
             <h2 class="section-title reveal" data-delay="1">Technology Stack.</h2>
             <p class="section-sub reveal" data-delay="2">The tools and technologies I use to build and ship products.</p>
         </div>
+        <!-- Rendered by React -->
         <div class="marquee-wrap"><div class="marquee-track" id="marquee-track"></div></div>
         <div class="section-wrap"><div class="tech-categories" id="tech-categories-grid"></div></div>
     </section>
@@ -1825,6 +1850,7 @@
             <p class="section-label reveal">Social proof</p>
             <h2 class="section-title reveal" data-delay="1">Client & Founder Feedback.</h2>
             <p class="section-sub reveal" data-delay="2">Trusted by builders, founders, and product leaders.</p>
+            <!-- Rendered by React -->
             <div class="testimonials-grid" id="testi-grid"></div>
         </div>
     </section>
@@ -1833,6 +1859,7 @@
         <div class="section-wrap">
             <p class="section-label reveal">Questions</p>
             <h2 class="section-title reveal" data-delay="1">Frequently Asked<br>Questions.</h2>
+            <!-- Rendered by React -->
             <div class="faq-list" id="faq-list"></div>
         </div>
     </section>
@@ -1865,7 +1892,7 @@
     </section>
 
     <footer>
-        <p class="footer-copy">© 2025 Oluwaseyi · Built solo, shipped with intent.</p>
+        <p class="footer-copy">© 2026 Oluwaseyi · Built solo, shipped with intent.</p>
         <div class="footer-links">
             <a href="https://github.com/seyistarr" target="_blank" rel="noopener">GitHub</a>
             <a href="https://www.linkedin.com/in/oluwaseyistr" target="_blank" rel="noopener">LinkedIn</a>
@@ -1881,8 +1908,20 @@
 
     <div class="toast-container" id="toast-container"></div>
 
+    <!-- ============================================================
+         LIBRARIES (all open source, MIT)
+         React 18 + ReactDOM 18 (UMD) · Babel Standalone (JSX in browser)
+         ============================================================ -->
+    <script src="https://cdn.jsdelivr.net/npm/react@18.3.1/umd/react.production.min.js" crossorigin></script>
+    <script src="https://cdn.jsdelivr.net/npm/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.24.7/babel.min.js" crossorigin></script>
+
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
+    <!-- ============================================================
+         CORE (vanilla) — theme, cursor, particles, scroll, reveal,
+         typewriter, toasts, contact form, nav.
+         ============================================================ -->
     <script>
         /* ============================================================
            GLOBAL STATE — declared FIRST so nothing hits a TDZ error
@@ -1907,7 +1946,6 @@
             updateParticleColors(theme);
         }
 
-        // Initial theme (already applied in <head>, but keep tokens in sync)
         (function initTheme() {
             let saved = null;
             try { saved = localStorage.getItem('theme'); } catch (e) {}
@@ -1934,31 +1972,11 @@
         }
 
         /* ============================================================
-           SVG ICON LIBRARY
+           SVG ICON LIBRARY (only what the vanilla layer still needs)
            ============================================================ */
         const svgIcons = {
             check: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
             xmark: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>',
-            star: '<svg width="14" height="14" viewBox="0 0 24 24" fill="#F59E0B" stroke="#F59E0B" stroke-width="1"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>',
-            chevronDown: '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>',
-            shield: '<svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',
-            pen: '<svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.83 2.83 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>',
-            shoppingBag: '<svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18"/><line x1="16" y1="10" x2="16" y2="14"/><line x1="8" y1="10" x2="8" y2="14"/></svg>',
-            rocket: '<svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 00-2.91-.09zM12 15l-3-3a22 22 0 012-3.95A12.88 12.88 0 0122 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 01-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg>',
-            globe: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>',
-            zap: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>',
-            circle: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>',
-            diamond: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l10 10-10 10L2 12z"/></svg>',
-            flame: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0011 12c0-1.38-.5-2-1-3-1.07-2.14-.5-4-1-6 .26 2.33-.5 3.5-1.5 5A4 4 0 007 16c0 2.76 2.24 5 5 5s5-2.24 5-5c0-1.5-.5-2.5-1-3.5-.69-1.38-.19-3.5-1-5.5.19 2.5-.5 4-1.5 5.5-.69 1-.69 2.5-.5 3.5"/></svg>',
-            square: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>',
-            cloud: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 109 20h9a5 5 0 000-10z"/></svg>',
-            database: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>',
-            leaf: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 16c.5-6-2-11-5-11-2 0-3.5 3-4 7-.3 2.5.5 5 2 6 2 1.5 5 .5 7-2z"/><path d="M17 16c2 0 4-1 4-3 0-2-1.5-3-3-4"/></svg>',
-            antenna: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17l2-4M9 17l2-4M13 17l2-4M17 17l2-4"/><circle cx="12" cy="7" r="3"/></svg>',
-            dotCircle: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4" fill="currentColor"/></svg>',
-            rabbit: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="13" rx="8" ry="7"/><circle cx="9" cy="10" r="1.5" fill="currentColor"/><circle cx="15" cy="10" r="1.5" fill="currentColor"/><path d="M12 3c1.5-1 4-1 5 1s-1 4-2 5"/><path d="M12 3c-1.5-1-4-1-5 1s1 4 2 5"/></svg>',
-            monitor: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>',
-            package: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 002 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>',
             spinner: '<svg class="spinner" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10" stroke-dasharray="32" stroke-dashoffset="8"/></svg>',
         };
 
@@ -2096,7 +2114,7 @@
         }
 
         /* ============================================================
-           REVEAL OBSERVER — with fallback
+           REVEAL OBSERVER — with fallback + refresh for React mounts
            ============================================================ */
         let revealObs = null;
         if ('IntersectionObserver' in window) {
@@ -2106,17 +2124,29 @@
                     revealObs.unobserve(e.target);
                 }
             }), { threshold: 0.1 });
-
-            document.querySelectorAll('.reveal,.reveal-left,.reveal-scale').forEach(el => revealObs.observe(el));
-        } else {
-            // Fallback: show everything immediately
-            document.querySelectorAll('.reveal,.reveal-left,.reveal-scale').forEach(el => el.classList.add('in'));
         }
 
         function observeReveal(el) {
             if (revealObs) revealObs.observe(el);
             else el.classList.add('in');
         }
+
+        /** Re-scan the DOM for reveal elements + rebind cursor hover.
+         *  Called on load and again after every React mount. */
+        function refreshReveals() {
+            document.querySelectorAll('.reveal,.reveal-left,.reveal-scale').forEach(el => {
+                if (el.classList.contains('in')) return;
+                observeReveal(el);
+            });
+            bindCursorHover();
+        }
+
+        // Expose for the React layer
+        window.refreshReveals = refreshReveals;
+        window.observeReveal = observeReveal;
+        window.bindCursorHover = bindCursorHover;
+
+        refreshReveals();
 
         /* ============================================================
            COUNT UP
@@ -2152,171 +2182,59 @@
         }
 
         /* ============================================================
-           FEATURES
+           HERO TYPEWRITER — "FROM IDEA / TO LAUNCH. / BUILT END-TO-END."
            ============================================================ */
-        const featuresData = [
-            { image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=200&h=200&fit=crop&auto=format&q=80', title: 'Product Strategy', desc: 'Turning ideas into clear product roadmaps — defining the core thesis, user needs, and MVP scope before writing a single line of code.' },
-            { image: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=200&h=200&fit=crop&auto=format&q=80', title: 'Full Stack Development', desc: 'Frontend, backend, databases and APIs — I build the entire product from end to end with clean, maintainable architecture.' },
-            { image: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=200&h=200&fit=crop&auto=format&q=80', title: 'Design Systems', desc: 'Creating scalable, consistent interfaces that users enjoy — from wireframes to polished UI with thoughtful interaction design.' },
-            { image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=200&h=200&fit=crop&auto=format&q=80', title: 'Growth Thinking', desc: 'Building products designed to acquire and retain users — baked-in analytics, onboarding flows, and viral loops from day one.' },
-            { image: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=200&h=200&fit=crop&auto=format&q=80', title: 'Infrastructure', desc: 'Cloud deployment, scalable architecture, and reliable hosting — ensuring your product runs smoothly at any scale.' },
-            { image: 'https://images.unsplash.com/photo-1517976487492-5750f3195933?w=200&h=200&fit=crop&auto=format&q=80', title: 'Shipping Speed', desc: 'Fast execution without sacrificing quality. MVPs in days, not months — iterate based on real user feedback.' },
-        ];
-        const featuresGrid = document.getElementById('features-grid');
-        if (featuresGrid) {
-            featuresData.forEach((f, i) => {
-                const div = document.createElement('div');
-                div.className = 'feat-card reveal';
-                div.dataset.delay = (i % 3) + 1;
-                div.innerHTML = `<div class="feat-icon"><img src="${f.image}" alt="${f.title}" loading="lazy"></div><h3 class="feat-title">${f.title}</h3><p class="feat-desc">${f.desc}</p>`;
-                featuresGrid.appendChild(div);
-                observeReveal(div);
-            });
-        }
+        (function typewriter() {
+            const lines = document.querySelectorAll('#hero-h1 .line');
+            if (!lines.length) return;
 
-        /* ============================================================
-           PROJECTS
-           ============================================================ */
-        const projectsData = [
-            { title: 'CivicReport', desc: 'A real-time civic incident reporting platform — citizens log incidents, authorities respond. Built for real-world impact.', role: 'Founder · Full Stack Development', tags: ['Supabase', 'Leaflet', 'Real-time', 'PWA'], url: 'https://civicreport-sigma.vercel.app/', icon: svgIcons.shield, gradient: 'linear-gradient(135deg,rgba(124,58,237,0.10),rgba(99,102,241,0.06))' },
-            { title: 'Freeupper', desc: 'A modern social blogging platform with an explore feed, reactions, bookmarks, video posts, and a rich profile dashboard.', role: 'Founder · Product Design · Full Stack', tags: ['Vanilla JS', 'Cloudinary', 'LocalStorage', 'Social'], url: 'https://freeupper.vercel.app/', icon: svgIcons.pen, gradient: 'linear-gradient(135deg,rgba(99,102,241,0.10),rgba(124,58,237,0.06))' },
-            { title: 'Fremeisc', desc: 'An innovative web application blending modern design with powerful functionality. Built with performance and user experience as top priorities.', role: 'Founder · Full Stack Development', tags: ['Vanilla JS', 'Vercel', 'Web App'], url: 'https://fremeisc.vercel.app/', icon: svgIcons.rocket, gradient: 'linear-gradient(135deg,rgba(124,58,237,0.13),rgba(99,102,241,0.08))' },
-            { title: 'Student CBT', desc: 'A complete computer-based testing platform with timed exams, auto-grading, and a rich question bank — designed for educational institutions.', role: 'Founder · Full Stack Development', tags: ['Node.js', 'Supabase', 'Vercel', 'EdTech'], url: 'https://student-cbt.vercel.app/', icon: svgIcons.pen, gradient: 'linear-gradient(135deg,rgba(99,102,241,0.12),rgba(124,58,237,0.10))' },
-            { title: 'Omekart', desc: 'A powerful e-commerce platform connecting buyers and vendors — seamless shopping with modern UI, robust backend, and integrated payments.', role: 'Founder · Product Design · Full Stack', tags: ['In Progress', 'E-Commerce', 'Node.js'], url: '#', icon: svgIcons.shoppingBag, gradient: 'linear-gradient(135deg,rgba(124,58,237,0.10),rgba(99,102,241,0.10))' },
-        ];
-        const projectsGrid = document.getElementById('projects-grid');
-        if (projectsGrid) {
-            projectsData.forEach((p, i) => {
-                const isLive = p.url !== '#';
-                const card = document.createElement('a');
-                card.className = 'proj-card reveal';
-                card.dataset.delay = (i % 2) + 1;
-                card.href = p.url;
-                card.target = isLive ? '_blank' : '_self';
-                card.rel = 'noopener';
-                const iframeHTML = isLive ? `<iframe src="${p.url}" loading="lazy" onload="this.closest('.proj-preview').classList.add('iframe-loaded')" style="background:${p.gradient};"></iframe>` : '';
-                card.innerHTML = `
-                    <div class="proj-preview">
-                        <div class="proj-placeholder" style="background:${p.gradient}">${p.icon}</div>
-                        ${iframeHTML}
-                        <div class="proj-overlay">
-                            <span class="proj-overlay-link" data-url="${p.url}" data-target="${isLive ? '_blank' : '_self'}">${isLive ? '↗ View live' : 'In progress'}</span>
-                        </div>
-                    </div>
-                    <div class="proj-body">
-                        <div class="proj-role">${p.role}</div>
-                        <div class="proj-tags">${p.tags.map(t => `<span class="proj-tag">${t}</span>`).join('')}</div>
-                        <h3 class="proj-title">${p.title}</h3>
-                        <p class="proj-desc">${p.desc}</p>
-                    </div>`;
-                const overlayBtn = card.querySelector('.proj-overlay-link');
-                if (overlayBtn && isLive) {
-                    overlayBtn.addEventListener('click', e => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        window.open(overlayBtn.dataset.url, overlayBtn.dataset.target);
-                    });
-                }
-                projectsGrid.appendChild(card);
-                observeReveal(card);
+            const texts = Array.from(lines).map(l => {
+                const t = l.querySelector('.type-text');
+                return t ? t.dataset.text || '' : '';
             });
-        }
 
-        /* ============================================================
-           SKILLS MARQUEE
-           ============================================================ */
-        const marqueeSkills = [
-            { icon: svgIcons.globe, label: 'HTML/CSS' },
-            { icon: svgIcons.zap, label: 'Vanilla JS' },
-            { icon: svgIcons.circle, label: 'Node.js' },
-            { icon: svgIcons.diamond, label: 'Tailwind CSS' },
-            { icon: svgIcons.flame, label: 'Firebase' },
-            { icon: svgIcons.square, label: 'Supabase' },
-            { icon: svgIcons.cloud, label: 'Cloudinary' },
-            { icon: svgIcons.database, label: 'PostgreSQL' },
-            { icon: svgIcons.leaf, label: 'MongoDB' },
-            { icon: svgIcons.antenna, label: 'Socket.IO' },
-            { icon: svgIcons.dotCircle, label: 'Redis' },
-            { icon: svgIcons.rabbit, label: 'RabbitMQ' },
-            { icon: svgIcons.rocket, label: 'Vercel' },
-            { icon: svgIcons.monitor, label: 'Render' },
-            { icon: svgIcons.package, label: 'Express.js' },
-        ];
-        const track = document.getElementById('marquee-track');
-        if (track) {
-            [...marqueeSkills, ...marqueeSkills].forEach(s => {
-                const chip = document.createElement('div');
-                chip.className = 'skill-chip';
-                chip.innerHTML = `<span class="skill-chip-icon">${s.icon}</span>${s.label}`;
-                track.appendChild(chip);
-            });
-        }
+            const reduceMotion = window.matchMedia &&
+                window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-        const techCategories = [
-            { name: 'Frontend', items: ['HTML/CSS', 'Vanilla JS', 'Tailwind CSS', 'JSX (JavaScript XML)', 'PWA'] },
-            { name: 'Backend', items: ['Node.js', 'Express.js', 'REST APIs', 'WebSocket', 'JWT Auth'] },
-            { name: 'Databases', items: ['PostgreSQL', 'MongoDB', 'Supabase', 'Firebase Firestore', 'Redis'] },
-            { name: 'Cloud & DevOps', items: ['Vercel', 'Render', 'Cloudinary', 'GitHub Actions', 'CI/CD'] },
-            { name: 'Payments & Auth', items: ['Paystack', 'Firebase Auth', 'OAuth', 'Stripe'] },
-            { name: 'Tools & More', items: ['Socket.IO', 'RabbitMQ', 'Leaflet', 'Git', 'Figma'] },
-        ];
-        const techCatGrid = document.getElementById('tech-categories-grid');
-        if (techCatGrid) {
-            techCategories.forEach((cat, i) => {
-                const div = document.createElement('div');
-                div.className = 'tech-cat-card reveal';
-                div.dataset.delay = (i % 3) + 1;
-                div.innerHTML = `<h3 class="tech-cat-name">${cat.name}</h3><div class="tech-cat-items">${cat.items.map(item => `<span class="tech-cat-item">${item}</span>`).join('')}</div>`;
-                techCatGrid.appendChild(div);
-                observeReveal(div);
-            });
-        }
-
-        /* ============================================================
-           TESTIMONIALS
-           ============================================================ */
-        const testimonials = [
-            { quote: 'Oluwaseyi built CivicReport end-to-end, solo. The product thinking, the speed, the UI quality — genuinely impressive for a one-person operation.', name: 'Chioma A.', role: 'Product Lead · Lagos', photo: 'https://images.unsplash.com/photo-1763757321139-e7e4de128cd9?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
-            { quote: 'The Freeupper social feed feels like a real product. The immersive explore experience, reactions, video player, and smooth interactions make the platform feel polished and engaging.', name: 'Tunde O.', role: 'Software Engineer', photo: 'https://randomuser.me/api/portraits/men/83.jpg' },
-            { quote: 'Working with Seyi is different — he understands the business side too. He doesn\'t just code what you say, he questions what you actually need and delivers better.', name: 'Amara K.', role: 'Startup Founder', photo: 'https://images.unsplash.com/photo-1507152832244-10d45c7eda57?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
-        ];
-        const testiGrid = document.getElementById('testi-grid');
-        if (testiGrid) {
-            testimonials.forEach((t, i) => {
-                const div = document.createElement('div');
-                div.className = 'testi-card reveal';
-                div.dataset.delay = i + 1;
-                div.innerHTML = `<div class="testi-stars">${svgIcons.star}${svgIcons.star}${svgIcons.star}${svgIcons.star}${svgIcons.star}</div><p class="testi-quote">${t.quote}</p><div class="testi-person"><img class="testi-avatar" src="${t.photo}" alt="${t.name}" loading="lazy"><div><div class="testi-name">${t.name}</div><div class="testi-role">${t.role}</div></div></div>`;
-                testiGrid.appendChild(div);
-                observeReveal(div);
-            });
-        }
-
-        /* ============================================================
-           FAQ
-           ============================================================ */
-        const faqs = [
-            { q: 'What type of projects do you take on?', a: 'I work on social platforms, SaaS products, civic technology, and e-commerce applications — projects with genuine complexity. I prefer engagements where I can contribute to architectural decisions and take ownership of the product, rather than simply executing a predefined specification.' },
-            { q: 'Do you work solo or with a team?', a: 'I operate as a solo builder by choice, owning the entire stack from frontend to deployment. For larger engagements, I bring in trusted collaborators while I lead product strategy and architecture.' },
-            { q: 'What is your typical timeline for an MVP?', a: 'A focused MVP can be delivered in as little as 4 days. For larger platforms, work is structured into 2-week delivery sprints with continuous deployment, so you see measurable progress at every stage.' },
-            { q: 'How do you handle payments and authentication?', a: 'I integrate Paystack for the Nigerian and broader African market, and Stripe for global payments. Authentication is handled through Firebase, Supabase, or custom JWT — whichever best fits the product\'s requirements.' },
-            { q: 'Do you offer post-launch support?', a: 'Yes. I include 3 weeks of post-launch support as standard, with the exact scope tailored to the kind of product and its complexity. Extended retainer arrangements are available for products that require ongoing iteration.' },
-        ];
-        const faqList = document.getElementById('faq-list');
-        if (faqList) {
-            faqs.forEach(f => {
-                const div = document.createElement('div');
-                div.className = 'faq-item reveal';
-                div.innerHTML = `<button class="faq-q" type="button"><span>${f.q}</span><span class="faq-chevron">${svgIcons.chevronDown}</span></button><div class="faq-a">${f.a}</div>`;
-                faqList.appendChild(div);
-                observeReveal(div);
-                div.querySelector('.faq-q').addEventListener('click', () => {
-                    const isOpen = div.classList.contains('open');
-                    document.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'));
-                    if (!isOpen) div.classList.add('open');
+            // Respect reduced-motion: print instantly, kill the caret.
+            if (reduceMotion) {
+                lines.forEach((l, i) => {
+                    l.querySelector('.type-text').textContent = texts[i];
+                    l.querySelector('.caret').style.display = 'none';
                 });
-            });
-        }
+                return;
+            }
+
+            let lineIndex = 0;
+            let charIndex = 0;
+
+            function tick() {
+                if (lineIndex >= lines.length) return;
+
+                const lineEl = lines[lineIndex];
+                const target = lineEl.querySelector('.type-text');
+                const caret = lineEl.querySelector('.caret');
+
+                caret.classList.add('active');
+
+                if (charIndex < texts[lineIndex].length) {
+                    charIndex++;
+                    target.textContent = texts[lineIndex].slice(0, charIndex);
+                    setTimeout(tick, 35 + Math.random() * 45);
+                } else {
+                    const isLastLine = lineIndex === texts.length - 1;
+                    lineIndex++;
+                    charIndex = 0;
+                    if (!isLastLine) {
+                        caret.classList.remove('active');
+                        setTimeout(tick, 240);   // brief pause between lines
+                    }
+                    // On the last line the caret stays blinking.
+                }
+            }
+
+            setTimeout(tick, 900); // let the h1 fade-up finish first
+        })();
 
         /* ============================================================
            TOASTS + CONTACT FORM
@@ -2385,9 +2303,350 @@
             }, { rootMargin: '-40% 0px -55%' });
             sections.forEach(s => activeObs.observe(s));
         }
+    </script>
 
-        /* Rebind cursor hover to dynamically created elements */
-        bindCursorHover();
+    <!-- ============================================================
+         REACT LAYER
+         All dynamic sections (features, projects, skills, tech stack,
+         testimonials, FAQ) are React components rendered with JSX.
+         Images are served through ImageKit (front it with Cloudflare
+         for caching / custom domain).
+         ============================================================ -->
+    <script type="text/babel" data-presets="react">
+        const { useState, useEffect } = React;
+
+        /* ------------------------------------------------------------
+           ImageKit image delivery
+           Replace `endpoint` with your own ImageKit URL endpoint, e.g.
+           https://ik.imagekit.io/<your_imagekit_id>
+           Put Cloudflare in front of it for caching + a custom domain.
+           Every <Img /> falls back to a remote URL if ImageKit 404s,
+           so the page never shows a broken image.
+           ------------------------------------------------------------ */
+        const IK = {
+            endpoint: 'https://ik.imagekit.io/oluwaseyi', // ← your ImageKit URL endpoint
+            tr: {
+                icon:   'tr:w-160,h-160,fo-auto,q-80,f-auto',
+                avatar: 'tr:w-96,h-96,fo-face,q-80,f-auto',
+            },
+        };
+
+        const ikUrl = (path, tr) => `${IK.endpoint}/${path}${tr ? '?' + tr : ''}`;
+
+        function Img({ path, fallback, tr, alt, className }) {
+            const [src, setSrc] = useState(() => ikUrl(path, tr));
+            return (
+                <img
+                    src={src}
+                    alt={alt}
+                    className={className}
+                    loading="lazy"
+                    decoding="async"
+                    onError={() => {
+                        if (fallback && src !== fallback) setSrc(fallback);
+                    }}
+                />
+            );
+        }
+
+        /* After a React tree mounts, tell the vanilla layer to pick up
+           the new .reveal nodes and rebind the custom cursor. */
+        function useReveal() {
+            useEffect(() => {
+                if (window.refreshReveals) window.refreshReveals();
+            }, []);
+        }
+
+        /* ------------------------------------------------------------
+           Icons (JSX)
+           ------------------------------------------------------------ */
+        const Svg = ({ size = 18, children }) => (
+            <svg
+                width={size} height={size} viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" strokeWidth="2"
+                strokeLinecap="round" strokeLinejoin="round"
+            >{children}</svg>
+        );
+
+        const Icon = {
+            shield: (
+                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                </svg>
+            ),
+            pen: (
+                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M17 3a2.83 2.83 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z" />
+                </svg>
+            ),
+            shoppingBag: (
+                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18" />
+                    <line x1="16" y1="10" x2="16" y2="14" />
+                    <line x1="8" y1="10" x2="8" y2="14" />
+                </svg>
+            ),
+            rocket: (
+                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 00-2.91-.09zM12 15l-3-3a22 22 0 012-3.95A12.88 12.88 0 0122 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 01-4 2z" />
+                    <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5" />
+                </svg>
+            ),
+            star: (
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="#F59E0B" stroke="#F59E0B" strokeWidth="1">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                </svg>
+            ),
+            chevronDown: (
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="6 9 12 15 18 9" />
+                </svg>
+            ),
+        };
+
+        const SkillIcon = {
+            globe: <Svg><circle cx="12" cy="12" r="10" /><line x1="2" y1="12" x2="22" y2="12" /><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z" /></Svg>,
+            zap: <Svg><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" /></Svg>,
+            circle: <Svg><circle cx="12" cy="12" r="10" /></Svg>,
+            diamond: <Svg><path d="M12 2l10 10-10 10L2 12z" /></Svg>,
+            flame: <Svg><path d="M12 2s5 5 5 10a5 5 0 11-10 0c0-5 5-10 5-10z" /></Svg>,
+            square: <Svg><rect x="3" y="3" width="18" height="18" rx="2" /></Svg>,
+            cloud: <Svg><path d="M18 10h-1.26A8 8 0 109 20h9a5 5 0 000-10z" /></Svg>,
+            database: <Svg><ellipse cx="12" cy="5" rx="9" ry="3" /><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3" /><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5" /></Svg>,
+            leaf: <Svg><path d="M11 20A7 7 0 019 6c4-3 9-3 11-3 0 2 0 7-3 11a7 7 0 01-6 6z" /><path d="M2 22c2-6 6-9 10-10" /></Svg>,
+            wifi: <Svg><path d="M5 12.55a11 11 0 0114 0M8.5 16.03a6 6 0 017 0M12 20h.01" /></Svg>,
+            dotCircle: <Svg><circle cx="12" cy="12" r="10" /><circle cx="12" cy="12" r="3" fill="currentColor" stroke="none" /></Svg>,
+            message: <Svg><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" /></Svg>,
+            vercel: <Svg><path d="M12 3l10 18H2z" /></Svg>,
+            monitor: <Svg><rect x="2" y="3" width="20" height="14" rx="2" /><line x1="8" y1="21" x2="16" y2="21" /><line x1="12" y1="17" x2="12" y2="21" /></Svg>,
+            package: <Svg><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 002 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z" /><polyline points="3.27 6.96 12 12.01 20.73 6.96" /><line x1="12" y1="22.08" x2="12" y2="12" /></Svg>,
+        };
+
+        /* ------------------------------------------------------------
+           FEATURES
+           ------------------------------------------------------------ */
+        const FEATURES = [
+            { ik: 'features/product-strategy.jpg', fb: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=200&h=200&fit=crop&auto=format&q=80', title: 'Product Strategy', desc: 'Turning ideas into clear product roadmaps — defining the core thesis, user needs, and MVP scope before writing a single line of code.' },
+            { ik: 'features/full-stack-development.jpg', fb: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=200&h=200&fit=crop&auto=format&q=80', title: 'Full Stack Development', desc: 'Frontend, backend, databases and APIs — I build the entire product from end to end with clean, maintainable architecture.' },
+            { ik: 'features/design-systems.jpg', fb: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=200&h=200&fit=crop&auto=format&q=80', title: 'Design Systems', desc: 'Creating scalable, consistent interfaces that users enjoy — from wireframes to polished UI with thoughtful interaction design.' },
+            { ik: 'features/growth-thinking.jpg', fb: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=200&h=200&fit=crop&auto=format&q=80', title: 'Growth Thinking', desc: 'Building products designed to acquire and retain users — baked-in analytics, onboarding flows, and viral loops from day one.' },
+            { ik: 'features/infrastructure.jpg', fb: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=200&h=200&fit=crop&auto=format&q=80', title: 'Infrastructure', desc: 'Cloud deployment, scalable architecture, and reliable hosting — ensuring your product runs smoothly at any scale.' },
+            { ik: 'features/shipping-speed.jpg', fb: 'https://images.unsplash.com/photo-1517976487492-5750f3195933?w=200&h=200&fit=crop&auto=format&q=80', title: 'Shipping Speed', desc: 'Fast execution without sacrificing quality. MVPs in days, not months — iterate based on real user feedback.' },
+        ];
+
+        function FeaturesGrid() {
+            useReveal();
+            return FEATURES.map((f, i) => (
+                <div className="feat-card reveal" data-delay={(i % 3) + 1} key={f.title}>
+                    <div className="feat-icon">
+                        <Img path={f.ik} fallback={f.fb} tr={IK.tr.icon} alt={f.title} />
+                    </div>
+                    <h3 className="feat-title">{f.title}</h3>
+                    <p className="feat-desc">{f.desc}</p>
+                </div>
+            ));
+        }
+
+        /* ------------------------------------------------------------
+           PROJECTS
+           ------------------------------------------------------------ */
+        const PROJECTS = [
+            { title: 'CivicReport', desc: 'A real-time civic incident reporting platform — citizens log incidents, authorities respond. Built for real-world impact.', role: 'Founder · Full Stack Development', tags: ['Supabase', 'Leaflet', 'Real-time', 'PWA'], url: 'https://civicreport-sigma.vercel.app/', icon: Icon.shield, gradient: 'linear-gradient(135deg,rgba(124,58,237,0.10),rgba(99,102,241,0.06))' },
+            { title: 'Freeupper', desc: 'A modern social blogging platform with an explore feed, reactions, bookmarks, video posts, and a rich profile dashboard.', role: 'Founder · Product Design · Full Stack', tags: ['Vanilla JS', 'Cloudinary', 'LocalStorage', 'Social'], url: 'https://freeupper.vercel.app/', icon: Icon.pen, gradient: 'linear-gradient(135deg,rgba(99,102,241,0.10),rgba(124,58,237,0.06))' },
+            { title: 'Fremeisc', desc: 'An innovative web application blending modern design with powerful functionality. Built with performance and user experience as top priorities.', role: 'Founder · Full Stack Development', tags: ['Vanilla JS', 'Vercel', 'Web App'], url: 'https://fremeisc.vercel.app/', icon: Icon.rocket, gradient: 'linear-gradient(135deg,rgba(124,58,237,0.13),rgba(99,102,241,0.08))' },
+            { title: 'Student CBT', desc: 'A complete computer-based testing platform with timed exams, auto-grading, and a rich question bank — designed for educational institutions.', role: 'Founder · Full Stack Development', tags: ['Node.js', 'Supabase', 'Vercel', 'EdTech'], url: 'https://student-cbt.vercel.app/', icon: Icon.pen, gradient: 'linear-gradient(135deg,rgba(99,102,241,0.12),rgba(124,58,237,0.10))' },
+            { title: 'Omekart', desc: 'A powerful e-commerce platform connecting buyers and vendors — seamless shopping with modern UI, robust backend, and integrated payments.', role: 'Founder · Product Design · Full Stack', tags: ['In Progress', 'E-Commerce', 'Node.js'], url: '#', icon: Icon.shoppingBag, gradient: 'linear-gradient(135deg,rgba(124,58,237,0.10),rgba(99,102,241,0.10))' },
+        ];
+
+        function ProjectsGrid() {
+            useReveal();
+            const [loaded, setLoaded] = useState({});
+
+            return PROJECTS.map((p, i) => {
+                const isLive = p.url !== '#';
+                return (
+                    <a
+                        key={p.title}
+                        className="proj-card reveal"
+                        data-delay={(i % 2) + 1}
+                        href={p.url}
+                        target={isLive ? '_blank' : '_self'}
+                        rel="noopener"
+                    >
+                        <div className={'proj-preview' + (loaded[i] ? ' iframe-loaded' : '')}>
+                            <div className="proj-placeholder" style={{ background: p.gradient }}>
+                                {p.icon}
+                            </div>
+                            {isLive && (
+                                <iframe
+                                    src={p.url}
+                                    title={p.title}
+                                    loading="lazy"
+                                    style={{ background: p.gradient }}
+                                    onLoad={() => setLoaded(s => ({ ...s, [i]: true }))}
+                                />
+                            )}
+                            <div className="proj-overlay">
+                                <span
+                                    className="proj-overlay-link"
+                                    onClick={e => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        if (isLive) window.open(p.url, '_blank');
+                                    }}
+                                >
+                                    {isLive ? '↗ View live' : 'In progress'}
+                                </span>
+                            </div>
+                        </div>
+                        <div className="proj-body">
+                            <div className="proj-role">{p.role}</div>
+                            <div className="proj-tags">
+                                {p.tags.map(t => <span className="proj-tag" key={t}>{t}</span>)}
+                            </div>
+                            <h3 className="proj-title">{p.title}</h3>
+                            <p className="proj-desc">{p.desc}</p>
+                        </div>
+                    </a>
+                );
+            });
+        }
+
+        /* ------------------------------------------------------------
+           SKILLS MARQUEE
+           ------------------------------------------------------------ */
+        const MARQUEE_SKILLS = [
+            { icon: SkillIcon.globe, label: 'HTML/CSS' },
+            { icon: SkillIcon.zap, label: 'Vanilla JS' },
+            { icon: SkillIcon.circle, label: 'React' },
+            { icon: SkillIcon.circle, label: 'Node.js' },
+            { icon: SkillIcon.diamond, label: 'Tailwind CSS' },
+            { icon: SkillIcon.flame, label: 'Firebase' },
+            { icon: SkillIcon.square, label: 'Supabase' },
+            { icon: SkillIcon.cloud, label: 'Cloudinary' },
+            { icon: SkillIcon.cloud, label: 'ImageKit' },
+            { icon: SkillIcon.database, label: 'PostgreSQL' },
+            { icon: SkillIcon.leaf, label: 'MongoDB' },
+            { icon: SkillIcon.wifi, label: 'Socket.IO' },
+            { icon: SkillIcon.dotCircle, label: 'Redis' },
+            { icon: SkillIcon.message, label: 'RabbitMQ' },
+            { icon: SkillIcon.vercel, label: 'Vercel' },
+            { icon: SkillIcon.monitor, label: 'Render' },
+            { icon: SkillIcon.package, label: 'Express.js' },
+        ];
+
+        function SkillsMarquee() {
+            return [...MARQUEE_SKILLS, ...MARQUEE_SKILLS].map((s, i) => (
+                <div className="skill-chip" key={i}>
+                    <span className="skill-chip-icon">{s.icon}</span>
+                    {s.label}
+                </div>
+            ));
+        }
+
+        /* ------------------------------------------------------------
+           TECH CATEGORIES
+           ------------------------------------------------------------ */
+        const TECH_CATEGORIES = [
+            { name: 'Frontend', items: ['HTML/CSS', 'Vanilla JS', 'React', 'Tailwind CSS', 'JSX (JavaScript XML)', 'PWA'] },
+            { name: 'Backend', items: ['Node.js', 'Express.js', 'REST APIs', 'WebSocket', 'JWT Auth'] },
+            { name: 'Databases', items: ['PostgreSQL', 'MongoDB', 'Supabase', 'Firebase Firestore', 'Redis'] },
+            { name: 'Cloud & DevOps', items: ['Vercel', 'Render', 'Cloudflare', 'ImageKit', 'Cloudinary', 'GitHub Actions', 'CI/CD'] },
+            { name: 'Payments & Auth', items: ['Paystack', 'Firebase Auth', 'OAuth', 'Stripe'] },
+            { name: 'Tools & More', items: ['Socket.IO', 'RabbitMQ', 'Leaflet', 'Git', 'Figma'] },
+        ];
+
+        function TechCategories() {
+            useReveal();
+            return TECH_CATEGORIES.map((cat, i) => (
+                <div className="tech-cat-card reveal" data-delay={(i % 3) + 1} key={cat.name}>
+                    <h3 className="tech-cat-name">{cat.name}</h3>
+                    <div className="tech-cat-items">
+                        {cat.items.map(item => <span className="tech-cat-item" key={item}>{item}</span>)}
+                    </div>
+                </div>
+            ));
+        }
+
+        /* ------------------------------------------------------------
+           TESTIMONIALS
+           ------------------------------------------------------------ */
+        const TESTIMONIALS = [
+            { quote: 'Oluwaseyi built CivicReport end-to-end, solo. The product thinking, the speed, the UI quality — genuinely impressive for a one-person operation.', name: 'Chioma A.', role: 'Product Lead · Lagos', ik: 'avatars/chioma.jpg', fb: 'https://images.unsplash.com/photo-1763757321139-e7e4de128cd9?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
+            { quote: 'The Freeupper social feed feels like a real product. The immersive explore experience, reactions, video player, and smooth interactions make the platform feel polished and engaging.', name: 'Tunde O.', role: 'Software Engineer', ik: 'avatars/tunde.jpg', fb: 'https://randomuser.me/api/portraits/men/83.jpg' },
+            { quote: "Working with Seyi is different — he understands the business side too. He doesn't just code what you say, he questions what you actually need and delivers better.", name: 'Amara K.', role: 'Startup Founder', ik: 'avatars/amara.jpg', fb: 'https://images.unsplash.com/photo-1507152832244-10d45c7eda57?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
+        ];
+
+        function Testimonials() {
+            useReveal();
+            return TESTIMONIALS.map((t, i) => (
+                <div className="testi-card reveal" data-delay={i + 1} key={t.name}>
+                    <div className="testi-stars">
+                        {[0, 1, 2, 3, 4].map(n => <span className="testi-star" key={n}>{Icon.star}</span>)}
+                    </div>
+                    <p className="testi-quote">{t.quote}</p>
+                    <div className="testi-person">
+                        <Img
+                            path={t.ik}
+                            fallback={t.fb}
+                            tr={IK.tr.avatar}
+                            alt={t.name}
+                            className="testi-avatar"
+                        />
+                        <div>
+                            <div className="testi-name">{t.name}</div>
+                            <div className="testi-role">{t.role}</div>
+                        </div>
+                    </div>
+                </div>
+            ));
+        }
+
+        /* ------------------------------------------------------------
+           FAQ
+           ------------------------------------------------------------ */
+        const FAQS = [
+            { q: 'What type of projects do you take on?', a: 'I work on social platforms, SaaS products, civic technology, and e-commerce applications — projects with genuine complexity. I prefer engagements where I can contribute to architectural decisions and take ownership of the product, rather than simply executing a predefined specification.' },
+            { q: 'Do you work solo or with a team?', a: 'I operate as a solo builder by choice, owning the entire stack from frontend to deployment. For larger engagements, I bring in trusted collaborators while I lead product strategy and architecture.' },
+            { q: 'What is your typical timeline for an MVP?', a: 'A focused MVP can be delivered in as little as 4 days. For larger platforms, work is structured into 2-week delivery sprints with continuous deployment, so you see measurable progress at every stage.' },
+            { q: 'How do you handle payments and authentication?', a: "I integrate Paystack for the Nigerian and broader African market, and Stripe for global payments. Authentication is handled through Firebase, Supabase, or custom JWT — whichever best fits the product's requirements." },
+            { q: 'Do you offer post-launch support?', a: 'Yes. I include 3 weeks of post-launch support as standard, with the exact scope tailored to the kind of product and its complexity. Extended retainer arrangements are available for products that require ongoing iteration.' },
+        ];
+
+        function FaqList() {
+            useReveal();
+            const [openIndex, setOpenIndex] = useState(-1);
+
+            return FAQS.map((f, i) => (
+                <div className={'faq-item reveal' + (openIndex === i ? ' open' : '')} key={f.q}>
+                    <button
+                        className="faq-q"
+                        type="button"
+                        onClick={() => setOpenIndex(openIndex === i ? -1 : i)}
+                    >
+                        <span>{f.q}</span>
+                        <span className="faq-chevron">{Icon.chevronDown}</span>
+                    </button>
+                    <div className="faq-a">{f.a}</div>
+                </div>
+            ));
+        }
+
+        /* ------------------------------------------------------------
+           MOUNT
+           ------------------------------------------------------------ */
+        function mount(id, node) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            ReactDOM.createRoot(el).render(node);
+        }
+
+        mount('features-grid', <FeaturesGrid />);
+        mount('projects-grid', <ProjectsGrid />);
+        mount('marquee-track', <SkillsMarquee />);
+        mount('tech-categories-grid', <TechCategories />);
+        mount('testi-grid', <Testimonials />);
+        mount('faq-list', <FaqList />);
     </script>
 </body>
 </html>
